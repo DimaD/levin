@@ -27,6 +27,9 @@
 (defn highlight? [clipping]
   (tagged-with? :highlight clipping))
 
+(defn note? [clipping]
+  (tagged-with? :note clipping))
+
 (defn build
   "Build clipping of specified type from a sequence of fields"
   [type fields]

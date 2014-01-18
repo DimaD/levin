@@ -17,6 +17,13 @@
   (should-contain :added-on clipping)
   (should-contain :content clipping))
 
+(defn- should-be-note [clipping]
+  (clipping/note? clipping)
+  (should-contain :title clipping)
+  (should-contain :author clipping)
+  (should-contain :added-on clipping)
+  (should-contain :content clipping))
+
 (def bookmark
   "Anna Karenina (Leo Tolstoy)
 - Bookmark Loc. 1933 | Added on Wednesday, December 23, 2009, 09:37 PM")
@@ -28,6 +35,14 @@
 Happy families are all alike; every unhappy family is unhappy in its own way.")
 
 (def highlight-content "Happy families are all alike; every unhappy family is unhappy in its own way.")
+
+(def note
+  "Anna Karenina (Leo Tolstoy)
+- Bookmark Loc. 1 | Added on Wednesday, December 23, 2009, 09:37 PM
+
+I started reading it.")
+
+(def note-content "I started reading it.")
 
 (describe "parser/parse-clipping-title-and-author"
           (context "when string does not contain author"
@@ -83,4 +98,9 @@ Happy families are all alike; every unhappy family is unhappy in its own way.")
                          (should-be-highlight result))
                      (it "extracts content"
                          (should= highlight-content (:content result)))))
-          (context "when cliping is a note"))
+          (context "when cliping is a note"
+                   (let [result (parser/parse-clipping note)]
+                     (it "extracts note"
+                         (should-be-note result))
+                     (it "extracts content"
+                         (should= note-content (:content result))))))

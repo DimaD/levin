@@ -29,6 +29,18 @@
                             (it "is true"
                                 (should= true (clipping/highlight? {:type :highlight}))))))
 
+(describe "clipping/note?"
+          (context "when map does not contain `type` key"
+                   (it "is false"
+                       (should= false (clipping/note? {}))))
+          (context "when map contains `type` key"
+                   (context "and it's value is :bookmark"
+                            (it "is false"
+                                (should= false (clipping/note? {:type :bookmark}))))
+                   (context "and it's value is :note"
+                            (it "is true"
+                                (should= true (clipping/note? {:type :note}))))))
+
 (describe "clipping/build"
           (context "when there are no fields data"
                    (let [result (clipping/build :bookmark [])]
