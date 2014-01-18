@@ -24,6 +24,9 @@
 (defn bookmark? [clipping]
   (tagged-with? :bookmark clipping))
 
+(defn highlight? [clipping]
+  (tagged-with? :highlight clipping))
+
 (defn build
   "Build clipping of specified type from a sequence of fields"
   [type fields]

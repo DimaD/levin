@@ -6,7 +6,28 @@
 (defn- should-be-bookmark [clipping]
   (clipping/bookmark? clipping)
   (should-contain :title clipping)
-  (should-contain :author clipping))
+  (should-contain :author clipping)
+  (should-contain :added-on clipping)
+  (should-not-contain :content clipping))
+
+(defn- should-be-highlight [clipping]
+  (clipping/highlight? clipping)
+  (should-contain :title clipping)
+  (should-contain :author clipping)
+  (should-contain :added-on clipping)
+  (should-contain :content clipping))
+
+(def bookmark
+  "Anna Karenina (Leo Tolstoy)
+- Bookmark Loc. 1933 | Added on Wednesday, December 23, 2009, 09:37 PM")
+
+(def highlight
+  "Anna Karenina (Leo Tolstoy)
+- Bookmark Loc. 1922 | Added on Wednesday, December 23, 2009, 09:37 PM
+
+Happy families are all alike; every unhappy family is unhappy in its own way.")
+
+(def highlight-content "Happy families are all alike; every unhappy family is unhappy in its own way.")
 
 (describe "parser/parse-clipping-title-and-author"
           (context "when string does not contain author"
@@ -44,9 +65,7 @@
 
 (describe "parser/parse-clipping"
           (context "when clipping is bookmark"
-                   (let [clipping "Anna Karenina (Leo Tolstoy)
-- Bookmark Loc. 1933 | Added on Wednesday, December 23, 2009, 09:37 PM"
-                         result (parser/parse-clipping clipping)]
+                   (let [result (parser/parse-clipping bookmark)]
                      (it "extracts bookmark"
                          (should-be-bookmark result))
                      (it "extracts title"
@@ -58,5 +77,10 @@
                      (it "extracts creation date as a string"
                          (should= "Wednesday, December 23, 2009, 09:37 PM" (:added-on result)))))
 
-          (context "when clipping is a highlight")
+          (context "when clipping is a highlight"
+                   (let [result (parser/parse-clipping highlight)]
+                     (it "extracts highlight"
+                         (should-be-highlight result))
+                     (it "extracts content"
+                         (should= highlight-content (:content result)))))
           (context "when cliping is a note"))

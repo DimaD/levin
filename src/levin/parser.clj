@@ -48,6 +48,7 @@
   (let [[first second & notes] (str/split-lines str)
         title-and-author (parse-clipping-title-and-author first)
         type-location-date (parse-clipping-type-location-and-date second)
-        fields (concat title-and-author type-location-date [[:note notes]])]
+        content [[:content (str/join (rest notes))]] ;; there is an empty line between meta data and content
+        fields (concat title-and-author type-location-date content)]
     (clipping/build :bookmark (filter-present fields))
 ))
