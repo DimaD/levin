@@ -18,7 +18,7 @@
             [levin.clipping :as clipping]))
 
 (def title-and-author-re #"^(.+) \((.+)\)$")
-(def type-location-and-date-re #"^-\s(?:Your\s)?(\w+) (?:on page ([0-9-]*?) \| )?(?:Loc(?:ation|\.) ([0-9-]*?) +\| )?Added on (.*)$")
+(def type-location-and-date-re #"(?i)^-\s(?:Your\s)?(\w+) (?:on page ([0-9-]*?) \| )?(?:Loc(?:ation|\.) ([0-9-]*?) +\| )?Added on (.*)$")
 
 (defn- filter-present
   "Filters only fields which have values"
