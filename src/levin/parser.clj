@@ -17,18 +17,37 @@
   (:require [clojure.string :as str]
             [levin.clipping :as clipping]))
 
+(def title-and-author-re #"^(.+) \((.+)\)$")
+(def type-location-and-date-re #"^-\s(?:Your\s)?(\w+) (?:on page ([0-9-]*?) \| )?(?:Loc(?:ation|\.) ([0-9-]*?) +\| )?Added on (.*)$")
+
+(defn- filter-present
+  "Filters only fields which have values"
+  [fields]
+  (filter (fn [[k v]] (not (nil? v)))
+          fields))
+
 (defn parse-clipping-title-and-author
   "Parses out title and possible author from the first
    line of the clipping"
   [str]
-  (if-let [[match title author] (re-matches #"^(.+) \((.+)\)$" str)]
+  (if-let [[match title author] (re-matches title-and-author-re str)]
     [[:title title] [:author author]]
     [[:title str]]))
+
+(defn parse-clipping-type-location-and-date
+  "Parses type, location and date of creation from the
+   second line of the clipping"
+  [str]
+  (if-let [[match type page location date] (re-matches type-location-and-date-re str)]
+    [[:type (keyword (str/lower-case type))] [:location location] [:added-on date] [:page page]]
+    []))
 
 (defn parse-clipping
   "Parses one clipping out of string"
   [str]
-  (let [lines (str/split-lines str)
-        title-and-author (parse-clipping-title-and-author (first lines))
-        note (rest lines)]
-    (clipping/build :bookmark (concat title-and-author note))))
+  (let [[first second & notes] (str/split-lines str)
+        title-and-author (parse-clipping-title-and-author first)
+        type-location-date (parse-clipping-type-location-and-date second)
+        fields (concat title-and-author type-location-date [[:note notes]])]
+    (clipping/build :bookmark (filter-present fields))
+))

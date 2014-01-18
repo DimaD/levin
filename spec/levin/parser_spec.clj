@@ -24,6 +24,24 @@
                      (it "extracts field for author"
                          (should-contain [:author author] result)))))
 
+(describe "parser/parse-clipping-type-location-and-date"
+          (context "when type is not present"
+                   (let [result (parser/parse-clipping-type-location-and-date "")]
+                     (it "returns empty list of fields"
+                         (should= [] result))))
+          (context "when type is present"
+                   (context "but date of creation is not present"
+                            (let [result (parser/parse-clipping-type-location-and-date "- Bookmark")]
+                              (it "returns empty list of fields"
+                                  (should= [] result))))
+                   (context "and date of creation is present"
+                            (let [result (parser/parse-clipping-type-location-and-date "- Bookmark Added on Wednesday, December 23, 2009, 09:37 PM")
+                                  date "Wednesday, December 23, 2009, 09:37 PM"]
+                              (it "extracts field for type"
+                                  (should-contain [:type :bookmark] result))
+                              (it "extracts field for date"
+                                  (should-contain [:added-on date] result))))))
+
 (describe "parser/parse-clipping"
           (context "when clipping is bookmark"
                    (let [clipping "Anna Karenina (Leo Tolstoy)
@@ -34,7 +52,11 @@
                      (it "extracts title"
                          (should= "Anna Karenina" (:title result)))
                      (it "extracts author"
-                         (should= "Leo Tolstoy" (:author result)))))
+                         (should= "Leo Tolstoy" (:author result)))
+                     (it "extracts location"
+                         (should= "1933" (:location result)))
+                     (it "extracts creation date as a string"
+                         (should= "Wednesday, December 23, 2009, 09:37 PM" (:added-on result)))))
 
           (context "when clipping is a highlight")
           (context "when cliping is a note"))
