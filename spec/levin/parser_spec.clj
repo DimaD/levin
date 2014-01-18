@@ -76,7 +76,12 @@ I started reading it.")
                               (it "extracts field for type"
                                   (should-contain [:type :bookmark] result))
                               (it "extracts field for date"
-                                  (should-contain [:added-on date] result))))))
+                                  (should-contain [:added-on date] result)))
+                            (context "and page is present"
+                                     (let [result (parser/parse-clipping-type-location-and-date "- Bookmark on Page 123 | Added on Wednesday, December 23, 2009, 09:37 PM")
+                                           page "123"]
+                                       (it "extracts field for page"
+                                           (should-contain [:page "123"] result)))))))
 
 (describe "parser/parse-clipping"
           (context "when clipping is bookmark"
