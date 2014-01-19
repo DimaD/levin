@@ -37,5 +37,5 @@
   "Build clipping associated with book from a sequence of fields"
   [book fields]
   (reduce (fn [map kv] (apply assoc map kv))
-          {:book book}
+          {:bookref book}
           fields))

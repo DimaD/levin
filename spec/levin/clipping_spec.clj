@@ -3,7 +3,8 @@
             [levin.clipping :as clipping]))
 
 (defn- should-be-untyped-clipping [clipping]
-  (should= false (clipping/typed? clipping)))
+  (should= false (clipping/typed? clipping))
+  (should-contain :bookref clipping))
 
 (defn- should-be-bookmark [clipping]
   (should= true (clipping/bookmark? clipping)))
