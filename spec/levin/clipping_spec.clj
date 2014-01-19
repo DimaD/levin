@@ -2,6 +2,9 @@
   (:require [speclj.core  :refer :all]
             [levin.clipping :as clipping]))
 
+(defn- should-be-untyped-clipping [clipping]
+  (should= false (clipping/typed? clipping)))
+
 (defn- should-be-bookmark [clipping]
   (should= true (clipping/bookmark? clipping)))
 
@@ -43,20 +46,16 @@
 
 (describe "clipping/build"
           (context "when there are no fields data"
-                   (let [result (clipping/build :bookmark [])]
+                   (let [result (clipping/build {:title "Anna Karenina"} [])]
+                     (it "builds clipping of unspecified type"
+                         (should-be-untyped-clipping result))))
+          (context "when there is `type` field"
+                   (let [result (clipping/build {:title "Anna Karenina"} [[:type :bookmark]])]
                      (it "builds clipping of specified type"
                          (should-be-bookmark result))))
-          (context "when there is `title` field"
-                   (let [result (clipping/build :bookmark [[:title "Anna Karenina"]])]
+          (context "when there are `type` and `:page` fields"
+                   (let [result (clipping/build {:title "Anna Karenina"} [[:type :bookmark], [:page "100"]])]
                      (it "builds clipping of specified type"
                          (should-be-bookmark result))
-                     (it "builds clipping with `title` field"
-                         (should-contain :title result))))
-          (context "when there are `title` and `author` fields"
-                   (let [result (clipping/build :bookmark [[:title "Anna Karenina"], [:author "Leo Tolstoy"]])]
-                     (it "builds clipping of specified type"
-                         (should-be-bookmark result))
-                     (it "builds clipping with `title` field"
-                         (should-contain :title result))
-                     (it "build clipping with `author` field"
-                         (should-contain :author result)))))
+                     (it "builds clipping with `page` field"
+                         (should-contain :page result)))))

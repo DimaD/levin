@@ -49,6 +49,6 @@
         book (parse-clipping-book-info first)
         type-location-date (parse-clipping-type-location-and-date second)
         content [[:content (str/join (rest notes))]] ;; there is an empty line between meta data and content
-        fields (concat [[:book book]] type-location-date content)]
-    (clipping/build :bookmark (filter-present fields))
+        fields (concat type-location-date content)]
+    (clipping/build book (filter-present fields))
 ))

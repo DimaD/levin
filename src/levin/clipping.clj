@@ -15,10 +15,13 @@
 
 (ns levin.clipping)
 
+(defn typed? [clipping]
+  (contains? clipping :type))
+
 (defn- tagged-with?
   "Checks if map has type key and if it's value matches expected"
   [expected-type clipping]
-  (and (contains? clipping :type)
+  (and (typed? clipping)
        (= expected-type (:type clipping))))
 
 (defn bookmark? [clipping]
@@ -31,8 +34,8 @@
   (tagged-with? :note clipping))
 
 (defn build
-  "Build clipping of specified type from a sequence of fields"
-  [type fields]
+  "Build clipping associated with book from a sequence of fields"
+  [book fields]
   (reduce (fn [map kv] (apply assoc map kv))
-          {:type type}
+          {:book book}
           fields))
