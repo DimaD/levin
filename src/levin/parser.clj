@@ -26,13 +26,13 @@
   (filter (fn [[k v]] (not (nil? v)))
           fields))
 
-(defn parse-clipping-title-and-author
+(defn parse-clipping-book-info
   "Parses out title and possible author from the first
    line of the clipping"
   [str]
   (if-let [[match title author] (re-matches title-and-author-re str)]
-    [[:title title] [:author author]]
-    [[:title str]]))
+    { :title title :author author }
+    { :title str }))
 
 (defn parse-clipping-type-location-and-date
   "Parses type, location and date of creation from the
@@ -46,9 +46,9 @@
   "Parses one clipping out of string"
   [str]
   (let [[first second & notes] (str/split-lines str)
-        title-and-author (parse-clipping-title-and-author first)
+        book (parse-clipping-book-info first)
         type-location-date (parse-clipping-type-location-and-date second)
         content [[:content (str/join (rest notes))]] ;; there is an empty line between meta data and content
-        fields (concat title-and-author type-location-date content)]
+        fields (concat [[:book book]] type-location-date content)]
     (clipping/build :bookmark (filter-present fields))
 ))

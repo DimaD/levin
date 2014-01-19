@@ -5,22 +5,19 @@
 
 (defn- should-be-bookmark [clipping]
   (clipping/bookmark? clipping)
-  (should-contain :title clipping)
-  (should-contain :author clipping)
+  (should-contain :book clipping)
   (should-contain :added-on clipping)
   (should-not-contain :content clipping))
 
 (defn- should-be-highlight [clipping]
   (clipping/highlight? clipping)
-  (should-contain :title clipping)
-  (should-contain :author clipping)
+  (should-contain :book clipping)
   (should-contain :added-on clipping)
   (should-contain :content clipping))
 
 (defn- should-be-note [clipping]
   (clipping/note? clipping)
-  (should-contain :title clipping)
-  (should-contain :author clipping)
+  (should-contain :book clipping)
   (should-contain :added-on clipping)
   (should-contain :content clipping))
 
@@ -44,21 +41,21 @@ I started reading it.")
 
 (def note-content "I started reading it.")
 
-(describe "parser/parse-clipping-title-and-author"
+(describe "parser/parse-clipping-book-info"
           (context "when string does not contain author"
                    (let [title "Anna Karenina"
-                         result (parser/parse-clipping-title-and-author title)]
+                         result (parser/parse-clipping-book-info title)]
                      (it "extracts field for title"
-                         (should-contain [:title title] result))))
+                         (should= title (:title result)))))
           (context "when string contains title and author"
                    (let [input "Anna Karenina (Leo Tolstoy)"
                          title  "Anna Karenina"
                          author "Leo Tolstoy"
-                         result (parser/parse-clipping-title-and-author input)]
+                         result (parser/parse-clipping-book-info input)]
                      (it "extracts field for title"
-                         (should-contain [:title title] result))
+                         (should= title (:title result)))
                      (it "extracts field for author"
-                         (should-contain [:author author] result)))))
+                         (should= author (:author result))))))
 
 (describe "parser/parse-clipping-type-location-and-date"
           (context "when type is not present"
