@@ -3,6 +3,10 @@
 This is a clojure library designed to parse kindle 'My Clippings.txt' file
 into simple clojure data structures.
 
+## Work In Progress
+
+This is by no way a usable library. I started it as a practical way to learn Clojure. Will remove this notice and write a proper README when I form it into something more usable than parsing a bunch of string.
+
 ## What's in the name
 
 Konstantin Levin is one of the main characters in the novel "Anna Karenina". He is a country landowner who discusses it's relationships with the land and farmers a lot. He reads a lot of books on the subjects
